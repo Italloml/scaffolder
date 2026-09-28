@@ -5,6 +5,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsUUID,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -32,6 +33,11 @@ export class CreateTaskDto {
   @MaxLength(150, { message: 'O título deve ter no máximo 150 caracteres.' })
   title!: string;
 
+  @ApiPropertyOptional({ description: 'Categoria da tarefa', nullable: true })
+  @IsOptional()
+  @IsUUID()
+  categoryId?: string | null;
+
   @ApiPropertyOptional({ description: 'Descrição detalhada da tarefa', example: 'Definir alertas para uso de CPU e memória.', maxLength: 1000 })
   @IsOptional()
   @IsString()
@@ -56,6 +62,11 @@ export class UpdateTaskDto {
   @MinLength(3, { message: 'O título deve ter no mínimo 3 caracteres.' })
   @MaxLength(150, { message: 'O título deve ter no máximo 150 caracteres.' })
   title?: string;
+
+  @ApiPropertyOptional({ description: 'Categoria da tarefa', nullable: true })
+  @IsOptional()
+  @IsUUID()
+  categoryId?: string | null;
 
   @ApiPropertyOptional({ description: 'Descrição detalhada da tarefa', maxLength: 1000 })
   @IsOptional()
@@ -96,6 +107,12 @@ export class TaskDto {
 
   @ApiProperty({ description: 'Título da tarefa', example: 'Configurar monitoramento' })
   title!: string;
+
+  @ApiPropertyOptional({ description: 'Identificador da categoria', nullable: true })
+  categoryId!: string | null;
+
+  @ApiPropertyOptional({ description: 'Título da categoria', nullable: true })
+  categoryTitle!: string | null;
 
   @ApiPropertyOptional({ description: 'Descrição da tarefa', nullable: true })
   description!: string | null;

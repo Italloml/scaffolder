@@ -42,8 +42,10 @@ export class TasksService {
         priority: (dto.priority as TaskPriorityEnum) || TaskPriorityEnum.MEDIUM,
         dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
         ownerId,
+        categoryId: dto.categoryId || null,
       },
       include: {
+        category: true,
         owner: {
           select: {
             id: true,
@@ -99,6 +101,7 @@ export class TasksService {
         take: pageSize,
         orderBy: { [sortBy]: sortOrder },
         include: {
+          category: true,
           owner: {
             select: {
               id: true,
@@ -130,6 +133,7 @@ export class TasksService {
         deletedAt: null,
       },
       include: {
+        category: true,
         owner: {
           select: {
             id: true,
@@ -174,6 +178,7 @@ export class TasksService {
       (dto.title !== undefined && dto.title !== existing.title) ||
       (dto.description !== undefined && dto.description !== existing.description) ||
       (dto.priority !== undefined && dto.priority !== existing.priority) ||
+      (dto.categoryId !== undefined && dto.categoryId !== existing.categoryId) ||
       (dto.dueDate !== undefined);
 
     if (isAlreadyCompleted && !isReopening && hasFieldChanges) {
@@ -199,9 +204,11 @@ export class TasksService {
         ...(dto.description !== undefined ? { description: dto.description.trim() || null } : {}),
         ...(dto.status !== undefined ? { status: dto.status as TaskStatusEnum } : {}),
         ...(dto.priority !== undefined ? { priority: dto.priority as TaskPriorityEnum } : {}),
+        ...(dto.categoryId !== undefined ? { categoryId: dto.categoryId || null } : {}),
         ...(dto.dueDate !== undefined ? { dueDate: dto.dueDate ? new Date(dto.dueDate) : null } : {}),
       },
       include: {
+        category: true,
         owner: {
           select: {
             id: true,
@@ -244,6 +251,8 @@ export class TasksService {
     return {
       id: task.id,
       title: task.title,
+      categoryId: task.categoryId ?? null,
+      categoryTitle: task.category?.title ?? null,
       description: task.description,
       status: task.status as TaskStatusEnum,
       priority: task.priority as TaskPriorityEnum,
